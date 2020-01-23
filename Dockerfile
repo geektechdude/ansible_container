@@ -25,12 +25,15 @@ RUN \
 
 # Makes the Ansible directories
 RUN mkdir /etc/ansible /ansible
+RUN mkdir ~/.ssh
 
 # Copies details of Ansible hosts into the container
 RUN echo "[local]" >> /etc/ansible/hosts && \
     echo "localhost" >> /etc/ansible/hosts && \
     echo "[web]" >> /etc/ansible/hosts && \
     echo "192.168.56.7" >> /etc/ansible/hosts
+    echo "host *" >> ~/.ssh/config &&\
+    echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
 # Downloads the Ansible tar (curl) and saves it (-o)
 RUN \
