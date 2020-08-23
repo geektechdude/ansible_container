@@ -1,9 +1,11 @@
-# geektechstuff
+#
 # using a lot of https://hub.docker.com/r/philm/ansible_playbook/dockerfile/
 
 # Alpine is a lightweight version of Linux.
 # apline:latest could also be used
 FROM alpine:3.7
+
+
 
 RUN \
 # apk add installs the following
@@ -31,6 +33,14 @@ RUN mkdir ~/.ssh
 RUN echo "host *" >> ~/.ssh/config &&\
     echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
+# SET IP FOR CONTAINER
+RUN echo "auto eth0" >> /etc/network/interfaces
+RUN echo "iface eth0 inet static" >> /etc/network/interfaces
+RUN echo "address 176.17.0.250" >> /etc/network/interfaces
+RUN echo "netmask 255.255.0.0" >> /etc/network/interfaces
+RUN ifdown eth0
+RUN ifup eth0    
+
 # Downloads the Ansible tar (curl) and saves it (-o)
 RUN \
   curl -fsSL https://releases.ansible.com/ansible/ansible-2.9.3.tar.gz -o ansible.tar.gz
@@ -43,6 +53,8 @@ RUN \
 RUN mkdir -p /ansible/playbooks
 # Makes the playbooks directory the working directory
 WORKDIR /ansible/playbooks
+
+
 
 # Sets environment variables
 ENV ANSIBLE_GATHERING smart
